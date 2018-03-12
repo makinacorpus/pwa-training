@@ -1,0 +1,54 @@
+.news-header {
+  position: relative;
+  background: #001529;
+}
+
+.news-header__logo {
+  width: 40px;
+}
+
+.mdl-layout__title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.news-logo-row {
+  min-height: 70px;
+  padding-left: 16px;
+}
+
+.news-logo {
+  background: url(images/news.svg) 50% no-repeat;
+  background-size: cover;
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+}
+
+.news-card .mdl-card__title {
+  padding-bottom: 0;
+}
+
+img.article-image {
+  width: 100%;
+  height: auto;
+}
+
+.loader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mdl-spinner {
+  width: 70px;
+  height: 70px;
+}
+
+.news-max-width {
+  min-height: 300px;
+  max-width: 900px;
+  margin: auto;
+}
