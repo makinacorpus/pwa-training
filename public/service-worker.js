@@ -1,3 +1,5 @@
+const CACHE_NAME = 'nr-v1';
+
 var filesToCache = [
   // Ressources locales
   '/',
@@ -37,8 +39,7 @@ function addToCache(request, response) {
 self.addEventListener("install", event => {
   console.log('Service Worker installé');
   event.waitUntil(
-    // On Install
-    caches.open('nr-v1').then(cache => {
+    caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(filesToCache);
     })
   );
@@ -71,3 +72,22 @@ self.addEventListener('fetch', event => {
     );
   }
 });
+
+self.addEventListener('activate', (event) => {
+  // On créer une tableau de caches à "whitelister"
+  var cacheWhitelist = [CACHE_NAME]
+  event.waitUntil(
+    // On récupère l'ensemble des caches disponibles
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        // On itère sur chacun des caches
+        cacheNames.map(cacheName => {
+          // Si il n'est pas whitelisté, on le supprimme
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      )
+    })
+  )
+})
