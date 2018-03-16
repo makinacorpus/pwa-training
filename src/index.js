@@ -1,7 +1,24 @@
 import Api from './api'
 
+// Service Worker
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('service-worker.js')
+      .then(registration => {
+        // Le Service Worker est déclaré !
+        console.log('Service Worker déclaré !');
+      })
+      .catch(error => {
+        // Il y a eu un problème
+        console.error('Erreur: ', error);
+      });
+  }
+}
+
 window.addEventListener('load', function() {
-  // TODO : Installer le service worker
+
+  registerServiceWorker();
   
   // Script pour le chargement des news via The Guardian API
   // http://open-platform.theguardian.com/documentation/
