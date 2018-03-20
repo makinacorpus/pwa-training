@@ -1,17 +1,15 @@
 import Api from './api'
 
-function update() {
-  // Le code qui sera exécuté si l'utilisateur accepte la mise à jour
+function update(worker) {
+  worker.postMessage({action: 'skipWaiting'})
 }
 
 var snackbarContainer = document.querySelector('#notification-toast-example');
-function showUpdateNotification() {
-  console.log('showUpdateNotification');
-  
+function showUpdateNotification(worker) {
   snackbarContainer.MaterialSnackbar.showSnackbar({
     message: 'Une mise à jour est disponible.',
     timeout: 4000,
-    actionHandler: update,
+    actionHandler: () => update(worker),
     actionText: 'Refraîchir'
   });
 }
@@ -30,7 +28,7 @@ function registerServiceWorker() {
           worker.addEventListener('statechange', () => {
             if (worker.state == 'installed') {
               // Un nouveau worker est prêt !!
-              showUpdateNotification()
+              showUpdateNotification(worker)
             }
           });
         };
@@ -44,7 +42,7 @@ function registerServiceWorker() {
         // elle est en attente, on affiche la notification
         if (registration.waiting) {
           // Un nouveau worker est prêt !!
-          showUpdateNotification()
+          showUpdateNotification(registration.waiting)
           return;
         }
 
