@@ -30,8 +30,8 @@ Le but est d'attendre un score de 100 (ou presque). Lighthouse nous indique chaq
 
 ## Transformer une application en PWA pas à pas
 
-- [Étape 2](https://github.com/makinacorpus/pwa-training/blob/master/01-firebase.md) : Héberger le site sur un service proposant le HTTPS ([Firebase Hosting](https://firebase.google.com/docs/hosting/))
-
 - [Étape 1](https://github.com/makinacorpus/pwa-training/blob/master/02-service-worker.md) : Mettre en place un Service Worker
+
+- [Étape 2](https://github.com/makinacorpus/pwa-training/blob/master/01-firebase.md) : Héberger le site sur un service proposant le HTTPS ([Firebase Hosting](https://firebase.google.com/docs/hosting/))
 
 - [Étape 3](https://github.com/makinacorpus/pwa-training/blob/master/03-manifest.md) : Configurer le manifest et l'icon de l'application
