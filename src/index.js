@@ -1,5 +1,21 @@
 import Api from './api'
 
+function update() {
+  // Le code qui sera exécuté si l'utilisateur accepte la mise à jour
+}
+
+var snackbarContainer = document.querySelector('#notification-toast-example');
+function showUpdateNotification() {
+  console.log('showUpdateNotification');
+  
+  snackbarContainer.MaterialSnackbar.showSnackbar({
+    message: 'Une mise à jour est disponible.',
+    timeout: 4000,
+    actionHandler: update,
+    actionText: 'Refraîchir'
+  });
+}
+
 // Service Worker
 function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
@@ -14,7 +30,7 @@ function registerServiceWorker() {
           worker.addEventListener('statechange', () => {
             if (worker.state == 'installed') {
               // Un nouveau worker est prêt !!
-              // TODO : Afficher la notification
+              showUpdateNotification()
             }
           });
         };
@@ -28,7 +44,7 @@ function registerServiceWorker() {
         // elle est en attente, on affiche la notification
         if (registration.waiting) {
           // Un nouveau worker est prêt !!
-          // TODO : Afficher la notification
+          showUpdateNotification()
           return;
         }
 
