@@ -8,6 +8,43 @@ function registerServiceWorker() {
       .then(registration => {
         // Le Service Worker est déclaré !
         console.log('Service Worker déclaré !');
+
+        // Fonction pour détecter la fin de l'installation d'un worker
+        function trackInstalling(worker) {
+          worker.addEventListener('statechange', () => {
+            if (worker.state == 'installed') {
+              // Un nouveau worker est prêt !!
+              // TODO : Afficher la notification
+            }
+          });
+        };
+
+        // S'il n'y a pas de controller, la page n'est pas chargée via le service worker
+        if (!navigator.serviceWorker.controller) {
+          return;
+        }
+
+        // Si une nouvelle version est déjà installée,
+        // elle est en attente, on affiche la notification
+        if (registration.waiting) {
+          // Un nouveau worker est prêt !!
+          // TODO : Afficher la notification
+          return;
+        }
+
+        // Si le SW est en cours d'installation, alors on vérifie son état
+        // si il est "installed", on affiche la notification
+        if (registration.installing) {
+          trackInstalling(registration.installing);
+          return;
+        }
+
+        // Sinon, on vérifie s'il y a un workers disponibles
+        // puis on vérifie son état, si il est "installed", on affiche la notification
+        registration.addEventListener('updatefound', () => {
+          trackInstalling(registration.installing);
+          return;
+        });
       })
       .catch(error => {
         // Il y a eu un problème
