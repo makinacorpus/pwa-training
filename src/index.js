@@ -64,6 +64,10 @@ function registerServiceWorker() {
         // Il y a eu un problème
         console.error('Erreur: ', error);
       });
+
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.location.reload();
+    })
   }
 }
 
