@@ -32,8 +32,51 @@ function addToCache(request, response) {
   const responseCopy = response.clone();
   caches.open(CACHE_NAME).then(cache => {
     cache.put(request, responseCopy);
+  });
+  return response;
+}
+
+function fetchFromCache(event) {
+  return caches.match(event.request).then(response => {
+    if (!response) {
+      // Si la ressource n'est pas trouvée en cache,
+      // On renvoit une erreur (suynchrone) qu'on va pouvoir "catcher"
+      throw Error('${event.request.url} non trouvé en cache');
+    }
+    return response;
   })
   return response;
+}
+
+function offlineResponse() {
+  return new Response('<p>Application non disponible</p>',
+    { headers: { 'Content-Type': 'text/html' } }
+  );
+}
+
+// Network First
+function respondFromNetworkThenCache(event) {
+  event.respondWith(
+    fetch(event.request)
+      // Si la requête aboutie, on met en cache une copie de la réponse
+      .then(response => addToCache(event.request, response))
+      // Si la requête échoue, on cherche si la ressource demandée n'est pas déjà en cache
+      .catch(() => fetchFromCache(event))
+      // Si non, on renvoie un message
+      .catch(() => offlineResponse())
+  );
+}
+
+// Cache First
+function respondFromCacheThenNetwork(event) {
+  event.respondWith(
+    // On cherche si la ressource demandée est en cache
+    fetchFromCache(event)
+      // Si non, on cherche via le réseau
+      .catch(() => fetch(event.request))
+      // Si la requête échoue, on renvoie un message
+      .catch(() => offlineResponse())
+  );
 }
 
 self.addEventListener("install", event => {
@@ -45,31 +88,15 @@ self.addEventListener("install", event => {
   );
 });
 
-
 self.addEventListener('fetch', event => {
   // D'abord on vérifie le type de requête
   if (isDynamicRequest(event)) {
     // Si c'est une ressource dynamique (provenant de l'API)
-    // Alors on va d'abord chercher la ressource sur le réseau
-    // puis stocker les réponses pour les rendre disponible hors ligne
-    event.respondWith(
-      // Network First
-      fetch(event.request)
-        // Si la requête aboutie, on met en cache une copie de la réponse
-        .then(response => addToCache(event.request, response))
-        // Si la requête échoue, on cherche si la ressource demandée n'est pas déjà en cache
-        .catch(function() {
-          return caches.match(event.request);
-        })
-    );
+    // Alors on va d'abord chercher la ressource en priorité sur le réseau
+    respondFromNetworkThenCache(event);
   } else {
     // Sinon, c'est une ressource statique, on charge en priorité via le cache
-    // Cache First
-    event.respondWith(
-      caches.match(event.request).then(response => {
-        return response || fetch(event.request);
-      })
-    );
+    respondFromCacheThenNetwork(event);
   }
 });
 
