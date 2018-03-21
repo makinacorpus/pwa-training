@@ -18,7 +18,7 @@ function showUpdateNotification(worker) {
 function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-      .register('service-worker.js')
+      .register('OneSignalSDKWorker.js')
       .then(registration => {
         // Le Service Worker est déclaré !
         console.log('Service Worker déclaré !');
