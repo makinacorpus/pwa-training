@@ -122,3 +122,6 @@ self.__precacheManifest = [
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+workbox.routing.registerRoute(/^https:\/\/media.guim.co.uk\//, workbox.strategies.staleWhileRevalidate(), 'GET');
+workbox.routing.registerRoute(/^https:\/\/content.guardianapis.com\//, workbox.strategies.staleWhileRevalidate(), 'GET');
